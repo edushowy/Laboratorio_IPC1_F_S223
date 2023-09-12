@@ -4,14 +4,16 @@
  */
 package objetos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author edush
  */
-public class Estudiante {
-    private String nombres;
-    private int carnet;
+public class Estudiante implements Serializable{
+    private String nombres;    
     private String apellidos;
+    private int carnet;
 
     public Estudiante() {
     }
@@ -45,7 +47,4 @@ public class Estudiante {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
-    
-    
-    
 }

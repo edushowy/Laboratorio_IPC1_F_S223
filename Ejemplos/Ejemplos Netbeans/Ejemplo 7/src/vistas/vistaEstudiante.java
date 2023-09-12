@@ -5,18 +5,27 @@
 package vistas;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import static java.lang.Integer.parseInt;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import objetos.Estudiante;
+import objetos.LeerObjetos;
 
 /**
  *
  * @author edush
  */
-public class vistaEstudiante extends javax.swing.JFrame {
+public class vistaEstudiante extends javax.swing.JFrame{
 
     /**
      * Creates new form vistaEstudiante
@@ -24,6 +33,11 @@ public class vistaEstudiante extends javax.swing.JFrame {
     public vistaEstudiante() {
         initComponents();
     }
+    
+    // variables globales
+    String rutaArchivo = "C:\\Users\\edush\\OneDrive\\Escritorio\\salida.bin";
+    ArrayList<Estudiante> listaEstudiantes = new ArrayList<Estudiante>();
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,6 +55,8 @@ public class vistaEstudiante extends javax.swing.JFrame {
         tApellidos = new javax.swing.JTextField();
         tCarnet = new javax.swing.JTextField();
         bGuardar = new javax.swing.JButton();
+        bLeerBinario = new javax.swing.JButton();
+        cargaMasiva = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +67,25 @@ public class vistaEstudiante extends javax.swing.JFrame {
         jLabel3.setText("Carnet");
 
         bGuardar.setText("Guardar en archivo");
+        bGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGuardarActionPerformed(evt);
+            }
+        });
+
+        bLeerBinario.setText("Leer archivo");
+        bLeerBinario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bLeerBinarioActionPerformed(evt);
+            }
+        });
+
+        cargaMasiva.setText("CARGA MASIVA");
+        cargaMasiva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargaMasivaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -75,8 +110,14 @@ public class vistaEstudiante extends javax.swing.JFrame {
                                 .addComponent(tCarnet))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(275, 275, 275)
-                        .addComponent(bGuardar)))
-                .addContainerGap(364, Short.MAX_VALUE))
+                        .addComponent(bGuardar)
+                        .addGap(64, 64, 64)
+                        .addComponent(bLeerBinario)))
+                .addContainerGap(213, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(cargaMasiva)
+                .addGap(343, 343, 343))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,12 +135,40 @@ public class vistaEstudiante extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(tCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(136, 136, 136)
-                .addComponent(bGuardar)
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bGuardar)
+                    .addComponent(bLeerBinario))
+                .addGap(64, 64, 64)
+                .addComponent(cargaMasiva)
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    // IOException para excepciones de manejo de archivos
+    private void bGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarActionPerformed
+        try {
+            agregarNuevoEstudiante();
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_bGuardarActionPerformed
+
+    private void bLeerBinarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLeerBinarioActionPerformed
+        // TODO add your handling code here:
+        LeerObjetos lo = new LeerObjetos();
+        lo.lecturaYmostrar();
+    }//GEN-LAST:event_bLeerBinarioActionPerformed
+
+    private void cargaMasivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargaMasivaActionPerformed
+        try {
+            // TODO add your handling code here:
+            leerCSV();
+        } catch (IOException ex) {
+            Logger.getLogger(vistaEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cargaMasivaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,33 +198,83 @@ public class vistaEstudiante extends javax.swing.JFrame {
         //</editor-fold>
 
             }
-    
-        private Estudiante nuevoEstudiante(){
+            
+        // IOException para excepciones de manejo de archivos
+        private void agregarNuevoEstudiante() throws IOException{
             Estudiante temporal = new Estudiante();
             temporal.setNombres(tNombres.getText());
             temporal.setApellidos(tApellidos.getText());
             temporal.setCarnet(parseInt(tCarnet.getText()));
             
-            return temporal;
+            if(listaEstudiantes.size()<300)
+                listaEstudiantes.add(temporal);
+            else
+                JOptionPane.showMessageDialog(this, "Capacidad de estudiantes alcanzada. Max 300");
+            
+            
+            
+            guardarlistadoEstuadiantesArchivo();
+        }
+        
+        
+        public void leerCSV() throws FileNotFoundException, IOException{
+            FileReader archivoEntrada = new FileReader("C:\\Users\\edush\\OneDrive\\Escritorio\\archivo.csv");
+            BufferedReader lectura = new BufferedReader(archivoEntrada);
+            String linea = lectura.readLine();
+            int fila=0;
+            
+           while(linea!=null){
+               
+               if(fila>0){
+                //System.out.println(linea);
+                String[] campos = linea.split(",",3);
+                    if(listaEstudiantes.size()<=300)
+                    listaEstudiantes.add(new Estudiante(campos[0], parseInt(campos[1]), campos[2]));
+                    else
+                    JOptionPane.showMessageDialog(this, "Capacidad de estudiantes alcanzada Max 300");
+               }
+               fila++;
+               linea=lectura.readLine();
+           } 
+           
+           try {
+                FileOutputStream archivoSalida = new FileOutputStream(rutaArchivo);                                
+                ObjectOutputStream salida = new ObjectOutputStream(archivoSalida);                
+                salida.writeObject(listaEstudiantes);
+                //salida.close();
+                archivoSalida.close();
+            } catch (FileNotFoundException ex) {
+                System.out.println("Ocurrio un error");
+            }
+            JOptionPane.showMessageDialog(this, "Carga masiva de estudiantes exitosa");
+            
         }
     
-        private void guardarEstuadianteArchivo(){
-             
-           
+        private void guardarlistadoEstuadiantesArchivo() throws IOException {             
+                      
             try {
-                FileOutputStream archivoSalida = new FileOutputStream("C:/Users/edush/Desktop/Salida.txt");
-                BufferedOutputStream salida = new BufferedOutputStream(archivoSalida);
-                salida.writeObject(nuevoEstudiante());
                 
+                
+                FileOutputStream archivoSalida = new FileOutputStream(rutaArchivo);                                
+                ObjectOutputStream salida = new ObjectOutputStream(archivoSalida);                
+                salida.writeObject(listaEstudiantes);
+                //salida.close();
+                archivoSalida.close();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(vistaEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Ocurrio un error");
             }
+            JOptionPane.showMessageDialog(this, "Estudiante agregado exitosamente");
             
+            tNombres.setText("");
+            tApellidos.setText("");
+            tCarnet.setText("");            
         }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bGuardar;
+    private javax.swing.JButton bLeerBinario;
+    private javax.swing.JButton cargaMasiva;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
