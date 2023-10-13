@@ -48,6 +48,14 @@ const app = express();
 //para enviar parametros por body
 app.use(bodyParser.json());
 
+// variables
+var estudiantes = [];
+var doctores = [
+    {nombre:"Luis", apellido:"Lopez"},
+    {nombre:"Karla", apellido:"Garrido"}
+];
+
+
 app.listen(3002, ()=>{
     console.log('Nuestro servidor esta corriendo en el puerto 3002');
 });
@@ -80,4 +88,41 @@ app.get('/operaciones', function(req, res){
     const div = num1/num2;
     
     res.send("Resultados suma="+sum+" resta="+rest+" multiplicacion="+mul+" division="+div);
+});
+
+app.post('/guardarEnArreglo', function(req, res){
+    const nombre = req.body.nombre;
+    const apellido =  req.body.apellido;
+    const carnet = req.body.carnet;
+    const genero = req.body.genero;
+    const rutaImg = req.body.rutaImg;
+   
+    estudiantes.push({nombre:nombre, apellido:apellido, carnet: carnet, genero:genero, rutaImg:rutaImg});
+    
+    res.send("ingresado al arreglo: "+nombre+" "+carnet);
+});
+
+app.get('/buscarIndice', function(req, res){
+    const id = req.body.id;
+    
+    if(id>=0 && id<estudiantes.length){
+        var estuTemp = estudiantes[id];
+        res.status(200).json(estuTemp);
+    }else{
+        res.send("El id no existe ");
+    }    
+});
+
+app.get('/recorrerArreglo', function(req, res){
+    
+    let estuTemp;
+    console.log(".... inicio del arreglo .....")
+    
+    for(let id=0; id<estudiantes.length; id++){
+       estuTemp = estudiantes[id];
+       console.log("--> "+estuTemp.carnet+" "+estuTemp.nombre+" "+estuTemp.apellido+" "+estuTemp.genero+" "+estuTemp.rutaImg);
+    }  
+    console.log(".... fin del arreglo .....");
+
+    res.send("arreglo recorrido exitosamente");
 });
