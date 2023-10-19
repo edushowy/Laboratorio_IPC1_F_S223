@@ -37,13 +37,13 @@ para ejecutar entramos a la ruta donde esta este archivo 'index.js' y aplicamos 
 
 // llamanos a las dependencias
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-
 const app = express();
 
 //para enviar parametros por body
 app.use(bodyParser.json());
-
+app.use(cors());
 
 /*      ARRAYS      */
 
@@ -216,7 +216,7 @@ app.post('/guardarEstudianteArreglo', function(req, res){
     
 });
 
-app.get('/mostrarEstudiante', function(req, res){
+app.post('/mostrarEstudiante', function(req, res){
     const usuario = req.body.usuario;
     let estu={usuario:null};
     let temp=null;
@@ -237,7 +237,7 @@ app.get('/recorrerArregloEstudintes', function(req, res){     // se ve en la con
         estu = estudiantes[indice];        
         console.log("---> "+indice+" Nombre: "+estu.nombre+", Apellido: "+estu.apellido);
     }    
-    res.json({ mensaje: "Arreglo recorrido exitosamente"});
+    res.json(estudiantes);
 });
 
 app.post('/modificarEstudiante', function(req, res){
