@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Botonera } from './Botonera';
+import { BarraNavegacio } from './BarraNavegacio';
 
 
 export const Guardar = () => {
@@ -47,30 +48,60 @@ export const Guardar = () => {
 
     return (
         <div>
+            <BarraNavegacio />
             <Botonera />
 
-            <input type="text" id="usuarioTxt" name="usuarioTxt" placeholder='usuario' />
-            <br />
-            <input type="text" id="nom" name="nom" placeholder='nombre' />
-            <br />
-            <input type="text" id="ape" name="ape" placeholder='apellido' />
-            <br />
-            <input type="text" id="car" name="car" placeholder='carnet' />
-            <br />
-            <input type="text" id="cla" name="cla" placeholder='clave' />
-            <br />
-            <input type="text" id="gen" name="gen" placeholder='genero' />
-            <br />
-            <input type="text" id="act" name="act" placeholder='activo' />
-            <br />
+            <center>
+                <div className="card col-md-6">
+                <center>
+                    <div className="card-body col-md-10">
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Usuario</span>
+                            <input className="form-control" type="text" id="usuarioTxt" name="usuarioTxt" placeholder='usuario' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Nobre</span>
+                            <input className="form-control" type="text" id="nom" name="nom" placeholder='nombre' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Apellido</span>
+                            <input className="form-control" type="text" id="ape" name="ape" placeholder='apellido' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Carnet</span>
+                            <input className="form-control" type="text" id="car" name="car" placeholder='carnet' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Clave</span>
+                            <input className="form-control" type="text" id="cla" name="cla" placeholder='clave' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Genero</span>
+                            <input className="form-control" type="text" id="gen" name="gen" placeholder='genero' />
+                        </div>
+                        <br />
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">Activo</span>
+                            <input className="form-control" type="text" id="act" name="act" placeholder='activo' />
+                        </div>
+                        <br />
 
 
 
-            <button onClick={guardarEstudianteF}>Guardar</button>
+                        <button className="btn btn-danger" onClick={guardarEstudianteF}>Guardar</button>
 
 
 
-
+                    </div>
+                    </center>
+                </div>
+            </center>
         </div>
+
     )
 }

@@ -6,11 +6,11 @@ export const Botonera = () => {
     const navigate = useNavigate();
 
     const guardar = () => {
-        navigate('/');
+        navigate('/guardar');
     }
 
     const buscar = () => {
-        navigate('/guardar');
+        navigate('/buscar');
     }
 
     const mostrar = () => {
@@ -18,10 +18,10 @@ export const Botonera = () => {
     }
 
     return (
-        <div>
-            <button onClick={guardar}>Guardar</button>
-            <button onClick={buscar}>Buscar</button>
-            <button onClick={mostrar}>Mostrar</button>
+        <div className="card-body">
+            <button className="btn btn-primary" onClick={guardar} >Guardar</button> &nbsp;
+            <button className="btn btn-success" onClick={buscar}>Buscar</button> &nbsp;
+            <button className="btn btn-dark" onClick={mostrar}>Mostrar</button>
         </div>
     )
 }
